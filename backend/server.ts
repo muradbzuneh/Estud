@@ -1,6 +1,6 @@
-import app  = require('./src/app') ;
-import dotenv = require('dotenv');
-import connectDB = require('./src/config/db');
+import app from './src/app.js' ;
+import dotenv from 'dotenv';
+import connectDB  from './src/config/db.js';
 
 
 
