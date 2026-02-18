@@ -27,7 +27,7 @@ export const protect = (
 
     req.userId = decoded.id
     req.userRole = decoded.role
-
+    console.log(decoded)
     next()
   } catch (error) {
     res.status(401).json({ message: "Token invalid" })

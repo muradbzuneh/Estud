@@ -31,8 +31,11 @@ export const loginStudent = async(req:Request, res:Response) =>{
             name:student.name,
             email:student.email
         }
+        
      })
-    }
+     console.log("User Role:", req.userRole)
+   console.log("Allowed Roles:", roles) 
+    }  
     catch(error: any){
         res.status(500).json({message:"server error", error: error.message})
     }
