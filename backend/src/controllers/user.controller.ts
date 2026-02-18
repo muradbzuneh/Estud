@@ -2,14 +2,14 @@ import { Request, Response } from "express"
 import bcrypt from "bcrypt"
 import Department from "../models/Department.js"
 import User from "../models/userModels.js"
-import { AuthRequest  } from "../middlewares/auth.conroller.js"
+import { AuthRequest  } from "../middlewares/auth.middleware.js"
 
 
 export const getProfile = async (req: AuthRequest, res: Response) => {
   try {
     const student = await User.findById(req.userId)
       .select("-password")
-      .populate("department")
+      .populate("departmentId")
 
     if (!student) {
       return res.status(404).json({ message: "Student not found" })
@@ -17,20 +17,20 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json(student)
 
-  } catch (error) {
-    res.status(500).json({ message: "Server error" })
+  } catch (error:any) {
+    res.status(500).json({ message: "Server error" , error: error.message})
   }
 }
 
 export const registerStudent = async (req: Request, res: Response) => {
   try {
-    const { name, email, studentId, password, departmentId } = req.body
+    const { name, email, studentId, password, role, departmentId } = req.body
 
     // 1️⃣ Check department exists
-    const department = await Department.findById(departmentId)
-    if (!department) {
-      return res.status(400).json({ message: "Department not found" })
-    }
+    // const department = await Department.findById(departmentId)
+    // if (!department) {
+    //   return res.status(400).json({ message: "Department not found" })
+    // }
 
     // 2️⃣ Check if email already exists
     const existingEmail = await User.findOne({ email })
@@ -41,13 +41,23 @@ export const registerStudent = async (req: Request, res: Response) => {
     // 3️⃣ Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 
+    let department = null 
+
+    if (role === "STUDENT") {
+      department = await Department.findById(departmentId)
+      if (!department) {
+        return res.status(400).json({ message: "Department not found" })
+      }
+    }
+
     // 4️⃣ Create student
     const student = await User.create({
       name,
       email,
-      studentId,
+      role,
       password: hashedPassword,
-      departmentId: departmentId
+      departmentId: role === "STUDENT" ? departmentId : undefined,
+      studentId: role === "STUDENT" ? studentId : undefined
     })
 
     res.status(201).json({
@@ -55,7 +65,7 @@ export const registerStudent = async (req: Request, res: Response) => {
       student: {
         id: student.studentId,
         name: student.name,
-        email: student.email
+        role: student.role
       }
     })
 

@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken"
 
 export interface AuthRequest extends Request {
   userId?: string
+  userRole?: string
 }
 
 export const protect = (
@@ -22,9 +23,10 @@ export const protect = (
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET as string
-    ) as { id: string }
+    ) as { id: string; role:string}
 
     req.userId = decoded.id
+    req.userRole = decoded.role
 
     next()
   } catch (error) {
