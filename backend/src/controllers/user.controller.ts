@@ -2,6 +2,25 @@ import { Request, Response } from "express"
 import bcrypt from "bcrypt"
 import Department from "../models/Department.js"
 import User from "../models/userModels.js"
+import { AuthRequest  } from "../middlewares/auth.conroller.js"
+
+
+export const getProfile = async (req: AuthRequest, res: Response) => {
+  try {
+    const student = await User.findById(req.userId)
+      .select("-password")
+      .populate("department")
+
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" })
+    }
+
+    res.status(200).json(student)
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" })
+  }
+}
 
 export const registerStudent = async (req: Request, res: Response) => {
   try {
