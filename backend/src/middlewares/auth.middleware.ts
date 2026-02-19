@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express"
-import jwt from "jsonwebtoken"
+import Jwt from "jsonwebtoken"
 
 export interface AuthRequest extends Request {
   userId?: string
   userRole?: string
 }
 
-export const protect = (
+export const authenticate = (
   req: AuthRequest,
   res: Response,
   next: NextFunction
@@ -15,21 +15,23 @@ export const protect = (
     const authHeader = req.headers.authorization
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Not authorized" })
+      return res.status(401).json({ message: "No token provided" })
     }
 
     const token = authHeader.split(" ")[1]
 
-    const decoded = jwt.verify(
+    const decoded = Jwt.verify(
       token,
       process.env.JWT_SECRET as string
-    ) as { id: string; role:string}
+    ) as { id: string; role: string }
+
+    console.log("Decoded Token:", decoded) // 🔥 DEBUG
 
     req.userId = decoded.id
-    req.userRole = decoded.role
-    console.log(decoded)
+    req.userRole = decoded.role  // 🔥 THIS IS VERY IMPORTANT
+
     next()
   } catch (error) {
-    res.status(401).json({ message: "Token invalid" })
+    return res.status(401).json({ message: "Invalid token" })
   }
 }

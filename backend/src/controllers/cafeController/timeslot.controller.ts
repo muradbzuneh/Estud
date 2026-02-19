@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import timeSlot from "../models/timeSlot.js";
+import timeSlot from "../../models/cafeModel/timeSlot.js";
 
 export const createTimeSlot = async (req: Request, res: Response)=>{
     try

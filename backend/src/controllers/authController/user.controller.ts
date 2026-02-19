@@ -1,8 +1,8 @@
 import { Request, Response } from "express"
 import bcrypt from "bcrypt"
-import Department from "../models/Department.js"
-import User from "../models/userModels.js"
-import { AuthRequest  } from "../middlewares/auth.middleware.js"
+import Department from "../../models/authModel/Department.js"
+import User from "../../models/authModel/userModels.js"
+import { AuthRequest  } from "../../middlewares/auth.middleware.js"
 
 
 export const getProfile = async (req: AuthRequest, res: Response) => {

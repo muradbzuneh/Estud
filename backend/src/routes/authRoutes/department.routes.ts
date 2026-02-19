@@ -1,4 +1,4 @@
-import { registerDepartment } from "../controllers/department.controller.js";
+import { registerDepartment } from "../../controllers/authController/department.controller.js";
 import { Router } from "express";
 
 const deptRoute = Router()

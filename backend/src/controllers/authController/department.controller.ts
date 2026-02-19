@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import Department from "../models/Department.js"
+import Department from "../../models/authModel/Department.js"
 
 export const registerDepartment = async (req: Request, res: Response) => {
   try {

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt"
 import  Jwt  from "jsonwebtoken";
-import User from "../models/userModels.js";
+import User from "../../models/authModel/userModels.js";
 
 export const loginStudent = async(req:Request, res:Response) =>{
     try {
