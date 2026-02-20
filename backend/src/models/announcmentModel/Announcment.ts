@@ -2,17 +2,27 @@
 import mongoose from "mongoose";
 
 const announcementSchema = new mongoose.Schema({
-  title: String,
-  content: String,
+  title: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  content: {
+    type: String,
+    required: true,
+    trim: true
+  },
 
   department: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Department"
+    ref: "Department",
+    required: true
   },
 
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
+    required: true
   },
 
   isImportant: {

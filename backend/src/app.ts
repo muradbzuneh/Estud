@@ -6,6 +6,7 @@ import timsloteRoute from './routes/cafeRoutes/slotRoute.js'
 import reservationRoutes from "./routes/cafeRoutes/reservation.routes.js"
 import Announcment from './routes/AnnouncmentRoutes/AnnouncmentRoutes.js';
 
+
 const app= express();
 app.use(express.json());
 
