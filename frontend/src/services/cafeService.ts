@@ -2,17 +2,22 @@ import api from '../utils/api';
 
 export const cafeService = {
   getSlots: async () => {
-    const { data } = await api.get('/cafe/timeslots');
+    const { data } = await api.get('/timeslotes');
     return data;
   },
 
-  createReservation: async (slotId: string) => {
-    const { data } = await api.post('/cafe/reservations', { slotId });
+  createReservation: async (timeSlotId: string) => {
+    const { data } = await api.post('/reservations', { timeSlotId });
     return data;
   },
 
-  getReservations: async () => {
-    const { data } = await api.get('/cafe/reservations');
+  getMyReservations: async () => {
+    const { data } = await api.get('/reservations/my');
+    return data;
+  },
+
+  cancelReservation: async (reservationId: string) => {
+    const { data } = await api.delete(`/reservations/${reservationId}`);
     return data;
   }
 };

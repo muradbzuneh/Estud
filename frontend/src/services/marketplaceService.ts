@@ -1,23 +1,28 @@
 import api from '../utils/api';
 
 export const marketplaceService = {
-  getAll: async () => {
-    const { data } = await api.get('/marketplace/listings');
+  getAll: async (params?: { search?: string; category?: string; page?: number }) => {
+    const { data } = await api.get('/marketplace', { params });
     return data;
   },
 
   getById: async (id: string) => {
-    const { data } = await api.get(`/marketplace/listings/${id}`);
+    const { data } = await api.get(`/marketplace/${id}`);
     return data;
   },
 
   create: async (itemData: any) => {
-    const { data } = await api.post('/marketplace/listings', itemData);
+    const { data } = await api.post('/marketplace', itemData);
     return data;
   },
 
-  toggleFavorite: async (itemId: string) => {
-    const { data } = await api.post(`/marketplace/favorites/${itemId}`);
+  update: async (id: string, itemData: any) => {
+    const { data } = await api.put(`/marketplace/${id}`, itemData);
+    return data;
+  },
+
+  delete: async (id: string) => {
+    const { data } = await api.delete(`/marketplace/${id}`);
     return data;
   }
 };

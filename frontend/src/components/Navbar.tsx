@@ -1,9 +1,15 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Button from './Button';
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <nav className="bg-white shadow-md">
@@ -14,7 +20,7 @@ export default function Navbar() {
           </Link>
 
           <div className="flex items-center gap-6">
-            {user ? (
+            {isAuthenticated ? (
               <>
                 <Link to="/dashboard" className="text-gray-700 hover:text-blue-600">
                   Dashboard
@@ -25,11 +31,14 @@ export default function Navbar() {
                 <Link to="/cafe" className="text-gray-700 hover:text-blue-600">
                   Cafe
                 </Link>
+                <Link to="/cafe/bookings" className="text-gray-700 hover:text-blue-600">
+                  My Bookings
+                </Link>
                 <Link to="/marketplace" className="text-gray-700 hover:text-blue-600">
                   Marketplace
                 </Link>
-                <span className="text-gray-600">Hi, {user.name}</span>
-                <Button onClick={logout} variant="secondary" size="sm">
+                <span className="text-gray-600">Hi, {user?.name}</span>
+                <Button onClick={handleLogout} variant="secondary" size="sm">
                   Logout
                 </Button>
               </>
