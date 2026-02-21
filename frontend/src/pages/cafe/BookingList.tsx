@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Card from '../../components/Card';
 import Button from '../../components/Button';
 import { cafeService } from '../../services/cafeService';
-import { Reservation } from '../../types';
+import type { Reservation } from '../../types';
 import { formatDate } from '../../utils/formatDate';
 
 export default function BookingList() {

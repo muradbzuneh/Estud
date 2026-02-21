@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { authService } from '../services/authService';
-import { User } from '../types/index.js';
+import type { User } from '../types';
 
 interface AuthContextType {
   user: User | null;
@@ -14,21 +14,21 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
+  const loadUser = async () => {
+    try {
+      const userData = await authService.getProfile();
+      setUser(userData);
+    } catch {
+      localStorage.removeItem('token');
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       loadUser();
     }
   }, []);
-
-  const loadUser = async () => {
-    try {
-      const userData = await authService.getProfile();
-      setUser(userData);
-    } catch (err) {
-      localStorage.removeItem('token');
-    }
-  };
 
   const login = async (email: string, password: string) => {
     const { token, user: userData } = await authService.login(email, password);

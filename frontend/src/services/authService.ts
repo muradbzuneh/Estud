@@ -1,12 +1,12 @@
 import api from '../utils/api';
 
-export const authService = {
+export const authService  = {
   login: async (email: string, password: string) => {
     const { data } = await api.post('/students/login', { email, password });
     return data;
   },
 
-  register: async (userData: any) => {
+  register: async (userData:any) => {
     const { data } = await api.post('/students/register', userData);
     return data;
   },

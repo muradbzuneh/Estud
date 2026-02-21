@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../../components/Card';
 import { marketplaceService } from '../../services/marketplaceService';
-import { MarketplaceItem } from '../../types';
+import type { MarketplaceItem } from '../../types';
 
 export default function MarketplaceList() {
   const [items, setItems] = useState<MarketplaceItem[]>([]);

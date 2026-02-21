@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { announcementService } from '../../services/announcementService';
-import { Announcement } from '../../types';
+import type { Announcement } from '../../types';
 
 export default function AnnouncementDetail() {
   const { id } = useParams<{ id: string }>();
