@@ -3,7 +3,7 @@ import api from '../utils/api';
 export const announcementService = {
   getAll: async () => {
     const { data } = await api.get('/announcment');
-    return data;
+     return data.announcements;
   },
 
   getById: async (id: string) => {
