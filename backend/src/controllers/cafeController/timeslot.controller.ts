@@ -1,31 +1,165 @@
 import { Request, Response } from "express";
-import timeSlot from "../../models/cafeModel/timeSlot.js";
+import { AuthRequest } from "../../middlewares/auth.middleware.js";
+import TimeSlot from "../../models/cafeModel/timeSlot.js";
+import Reservation from "../../models/cafeModel/Reservation.js";
 
-export const createTimeSlot = async (req: Request, res: Response)=>{
-    try
-    {
-        const {startTime, endTime, capacity} = req.body
-    
+// FR-8: Café manager creates time slots
+export const createTimeSlot = async (req: Request, res: Response) => {
+  try {
+    const { date, startTime, endTime, capacity } = req.body;
 
-    const slot = await timeSlot.create({startTime, endTime, capacity})
+    if (!date || !startTime || !endTime || !capacity) {
+      return res.status(400).json({ 
+        message: "date, startTime, endTime, and capacity are required" 
+      });
+    }
+
+    // FR-9: Validate capacity
+    if (capacity < 1) {
+      return res.status(400).json({ message: "Capacity must be at least 1" });
+    }
+
+    const slot = await TimeSlot.create({
+      date: new Date(date),
+      startTime,
+      endTime,
+      capacity,
+      availableSeats: capacity
+    });
+
     res.status(201).json({
-        message: "Timeslot scucessfult created",
-        slot
+      message: "TimeSlot successfully created",
+      slot
+    });
 
-    })
+  } catch (error: any) {
+    if (error.code === 11000) {
+      return res.status(400).json({ 
+        message: "Time slot already exists for this date and time" 
+      });
     }
-    catch (error:any){
-        res.status(500).json({ message: "server error", error: error.massage})
+    res.status(500).json({ 
+      message: "Server error", 
+      error: error.message 
+    });
+  }
+};
+
+// FR-10: Students view available slots with real-time seat info
+export const getTimeSlots = async (req: AuthRequest, res: Response) => {
+  try {
+    const { date } = req.query;
+    
+    let filter: any = { 
+      isActive: true,
+      date: { $gte: new Date() } // Only future slots
+    };
+
+    if (date) {
+      const queryDate = new Date(date as string);
+      const nextDay = new Date(queryDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      
+      filter.date = {
+        $gte: queryDate,
+        $lt: nextDay
+      };
     }
 
-}
+    const slots = await TimeSlot.find(filter).sort({ date: 1, startTime: 1 });
 
-export const getTimeSlot = async (req: Request, res: Response) =>{
-    try{
-        const slots = await timeSlot.find().sort({startTime:1})
-        res.status(200).json(slots)
+    // Add booking status for each slot
+    const slotsWithStatus = slots.map(slot => ({
+      ...slot.toObject(),
+      isFull: slot.availableSeats === 0,
+      bookingEnabled: slot.availableSeats > 0
+    }));
+
+    res.status(200).json(slotsWithStatus);
+
+  } catch (error: any) {
+    res.status(500).json({ 
+      message: "Server error", 
+      error: error.message 
+    });
+  }
+};
+
+// Get slot details with remaining seats
+export const getSlotById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const slot = await TimeSlot.findById(id);
+    if (!slot) {
+      return res.status(404).json({ message: "Slot not found" });
     }
-    catch (error:any){
- res.status(500).json({message:"server error", error: error.massage})
-   }
-}
+
+    const reservationCount = await Reservation.countDocuments({
+      timeSlot: id,
+      status: "confirmed"
+    });
+
+    res.status(200).json({
+      ...slot.toObject(),
+      currentBookings: reservationCount,
+      remainingSeats: slot.availableSeats,
+      isFull: slot.availableSeats === 0
+    });
+
+  } catch (error: any) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Update slot (for café manager)
+export const updateTimeSlot = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    const slot = await TimeSlot.findByIdAndUpdate(
+      id,
+      updates,
+      { new: true, runValidators: true }
+    );
+
+    if (!slot) {
+      return res.status(404).json({ message: "Slot not found" });
+    }
+
+    res.status(200).json({
+      message: "Slot updated successfully",
+      slot
+    });
+
+  } catch (error: any) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Delete/deactivate slot
+export const deleteTimeSlot = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    // Check if there are active reservations
+    const activeReservations = await Reservation.countDocuments({
+      timeSlot: id,
+      status: "confirmed"
+    });
+
+    if (activeReservations > 0) {
+      return res.status(400).json({ 
+        message: "Cannot delete slot with active reservations" 
+      });
+    }
+
+    await TimeSlot.findByIdAndUpdate(id, { isActive: false });
+
+    res.status(200).json({ message: "Slot deactivated successfully" });
+
+  } catch (error: any) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

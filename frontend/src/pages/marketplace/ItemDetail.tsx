@@ -57,7 +57,7 @@ export default function ItemDetail() {
           }`}>{item.status}</span>
         </p>
         <p className="text-sm text-gray-500">
-          Seller: {item.seller.name}
+          {/* Seller: {item.seller.name} */}
         </p>
         <div className="mt-6">
           <Button onClick={handleDelete}>Delete Item</Button>

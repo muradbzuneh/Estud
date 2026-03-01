@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Button from './Button';
+import NotificationIcon from './NotificationIcon';
 
 export default function Navbar() {
   const { user, logout, isAuthenticated } = useAuth();
@@ -37,6 +38,12 @@ export default function Navbar() {
                 <Link to="/marketplace" className="text-gray-700 hover:text-blue-600">
                   Marketplace
                 </Link>
+                {user?.role === 'admin' && (
+                  <Link to="/admin" className="text-gray-700 hover:text-blue-600">
+                    Admin
+                  </Link>
+                )}
+                <NotificationIcon />
                 <span className="text-gray-600">Hi, {user?.name}</span>
                 <Button onClick={handleLogout} variant="secondary" size="sm">
                   Logout

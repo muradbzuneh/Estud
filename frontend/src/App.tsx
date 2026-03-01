@@ -10,6 +10,7 @@ import SlotList from './pages/cafe/SlotList';
 import BookingList from './pages/cafe/BookingList';
 import MarketplaceList from './pages/marketplace/MarketplaceList';
 import ItemDetail from './pages/marketplace/ItemDetail';
+import AdminDashboard from './pages/admin/AdminDashboard';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/cafe/bookings" element={<BookingList />} />
           <Route path="/marketplace" element={<MarketplaceList />} />
           <Route path="/marketplace/:id" element={<ItemDetail />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/" element={<Navigate to="/dashboard" />} />
         </Routes>
       </BrowserRouter>

@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 const reservationSchema = new mongoose.Schema(
   {
@@ -11,12 +11,17 @@ const reservationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "TimeSlot",
       required: true
+    },
+    status: {
+      type: String,
+      enum: ["confirmed", "cancelled"],
+      default: "confirmed"
     }
   },
   { timestamps: true }
-)
+);
 
-// Prevent duplicate booking of same slot
-reservationSchema.index({ user: 1, timeSlot: 1 }, { unique: true })
+// Prevent duplicate booking of same slot by same user
+reservationSchema.index({ user: 1, timeSlot: 1 }, { unique: true });
 
-export default mongoose.model("Reservation", reservationSchema)
+export default mongoose.model("Reservation", reservationSchema);
