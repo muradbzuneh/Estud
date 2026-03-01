@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
     enum: ["STUDENT", "ADMIN", "CAFE_MANAGER"],
     default: "STUDENT"
   },
+  profileImage: {
+    type: String,
+    default: null
+  }
 },
 { timestamps: true }
 );

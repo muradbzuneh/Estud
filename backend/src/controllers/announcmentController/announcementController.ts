@@ -35,9 +35,13 @@ export const createAnnouncement = async (req: AuthRequest, res: Response) => {
       });
     }
 
+    // Handle uploaded image
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
+
     const announcement = await Announcement.create({
       title,
       content,
+      image,
       targetGroup,
       department: targetGroup !== "UNIVERSITY" ? department : undefined,
       expiresAt: new Date(expiresAt),
@@ -181,6 +185,11 @@ export const updateAnnouncement = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const updates = req.body;
+
+    // Handle uploaded image
+    if (req.file) {
+      updates.image = `/uploads/${req.file.filename}`;
+    }
 
     const announcement = await Announcement.findByIdAndUpdate(
       id,

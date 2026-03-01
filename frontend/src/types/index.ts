@@ -7,6 +7,7 @@ export interface User {
   studentId?: string;
   departmentId?: string;
   department?: Department;
+  profileImage?: string;
 }
 
 export interface Department {
@@ -33,6 +34,7 @@ export interface Announcement {
   _id: string;
   title: string;
   content: string;
+  image?: string;
   targetGroup: 'UNIVERSITY' | 'DEPARTMENT' | 'CLASS';
   department?: Department;
   createdBy: User;
@@ -79,6 +81,7 @@ export interface MarketplaceItem {
   createdBy: User;
   isSold: boolean;
   isActive: boolean;
+  status?: string;
   createdAt: string;
 }
 
@@ -90,18 +93,6 @@ export interface Notification {
   message: string;
   type: 'announcement' | 'reservation' | 'marketplace';
   referenceId?: string;
-  isRead: boolean;
-  createdAt: string;
-}
-
-// Notification Types
-export interface Notification {
-  _id: string;
-  user: string;
-  title: string;
-  message: string;
-  type: 'announcement' | 'marketplace';
-  referenceId: string;
   isRead: boolean;
   createdAt: string;
   updatedAt: string;

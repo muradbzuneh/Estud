@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authenticate } from "../../middlewares/auth.middleware.js";
 import { authorize } from "../../middlewares/role.middleware.js";
+import { upload } from "../../middlewares/upload.js";
 import { 
   createItem, 
   getItems,
@@ -13,8 +14,8 @@ import {
 
 const router = Router();
 
-// Create listing (Students only)
-router.post("/", authenticate, authorize(["STUDENT"]), createItem);
+// Create listing with images (Students only)
+router.post("/", authenticate, authorize(["STUDENT"]), upload.array('images', 5), createItem);
 
 // Get all listings (All authenticated users)
 router.get("/", authenticate, getItems);
@@ -28,8 +29,8 @@ router.get("/:id", authenticate, getItemById);
 // Mark as sold (Owner only)
 router.patch("/:id/sold", authenticate, authorize(["STUDENT"]), markAsSold);
 
-// Update listing (Owner only)
-router.put("/:id", authenticate, authorize(["STUDENT"]), updateItem);
+// Update listing with images (Owner only)
+router.put("/:id", authenticate, authorize(["STUDENT"]), upload.array('images', 5), updateItem);
 
 // Delete listing (Owner or Admin)
 router.delete("/:id", authenticate, deleteItem);

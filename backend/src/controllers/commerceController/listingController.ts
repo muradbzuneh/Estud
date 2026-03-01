@@ -7,7 +7,7 @@ import { AuthRequest } from "../../middlewares/auth.middleware.js";
 export const createItem = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId;
-    const { title, description, price, category, images } = req.body;
+    const { title, description, price, category } = req.body;
 
     if (!title || !description || price === undefined) {
       return res.status(400).json({ 
@@ -34,13 +34,16 @@ export const createItem = async (req: AuthRequest, res: Response) => {
       });
     }
 
+    // Handle uploaded images
+    const images = req.files ? (req.files as Express.Multer.File[]).map(file => `/uploads/${file.filename}`) : [];
+
     const item = await MarketplaceItem.create({
       title,
       description,
       price,
       category: category || "other",
       department: user.departmentId,
-      images: images || [],
+      images,
       createdBy: userId
     });
 
@@ -154,6 +157,12 @@ export const updateItem = async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
     const userId = req.userId;
     const updates = req.body;
+
+    // Handle uploaded images
+    if (req.files && (req.files as Express.Multer.File[]).length > 0) {
+      const newImages = (req.files as Express.Multer.File[]).map(file => `/uploads/${file.filename}`);
+      updates.images = newImages;
+    }
 
     const item = await MarketplaceItem.findOneAndUpdate(
       { _id: id, createdBy: userId },

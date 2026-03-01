@@ -11,6 +11,10 @@ const announcementSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  image: {
+    type: String,
+    default: null
+  },
   targetGroup: {
     type: String,
     enum: ["UNIVERSITY", "DEPARTMENT", "CLASS"],

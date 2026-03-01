@@ -73,3 +73,39 @@ export const registerStudent = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Registration failed", error: error.message })
   }
 }
+
+export const updateProfile = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.userId;
+    const updates: any = {};
+
+    // Only allow updating specific fields
+    if (req.body.name) updates.name = req.body.name;
+    
+    // Handle profile image upload
+    if (req.file) {
+      updates.profileImage = `/uploads/${req.file.filename}`;
+    }
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      updates,
+      { new: true, runValidators: true }
+    ).select("-password").populate("departmentId");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      message: "Profile updated successfully",
+      user
+    });
+
+  } catch (error: any) {
+    res.status(500).json({ 
+      message: "Failed to update profile", 
+      error: error.message 
+    });
+  }
+}

@@ -28,4 +28,18 @@ export const registerDepartment = async (req: Request, res: Response) => {
 
     res.status(500).json({ message: "Server error" })
   }
+}
+
+export const getDepartments = async (req: Request, res: Response) => {
+  try {
+    const departments = await Department.find().sort({ name: 1 })
+
+    res.status(200).json(departments)
+
+  } catch (error: any) {
+    res.status(500).json({ 
+      message: "Failed to fetch departments", 
+      error: error.message 
+    })
+  }
 }   

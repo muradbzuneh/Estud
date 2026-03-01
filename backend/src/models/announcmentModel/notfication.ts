@@ -12,7 +12,7 @@ const notificationSchema = new mongoose.Schema({
 
   type: {
     type: String,
-    enum: ["announcement", "marketplace"],
+    enum: ["announcement", "reservation", "marketplace"],
   },
 
   referenceId: {

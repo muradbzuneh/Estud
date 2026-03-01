@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
-import { timeStamp } from "node:console";
 
+const departmentSchema = new mongoose.Schema({
+  name: { 
+    type: String, 
+    required: true,
+    unique: true,
+    trim: true
+  }
+}, { timestamps: true });
 
- const departmentSchema =new mongoose.Schema({
-    name:{ type: String, required: true },
-},
-{timestamps: true}
-)
-
-export default mongoose.model("Department", departmentSchema)        
+export default mongoose.model("Department", departmentSchema);        

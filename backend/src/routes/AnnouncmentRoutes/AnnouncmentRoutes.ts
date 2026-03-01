@@ -1,4 +1,5 @@
 import express from "express";
+import { upload } from "../../middlewares/upload.js";
 import { 
   createAnnouncement, 
   getAnnouncements,
@@ -11,8 +12,8 @@ import { authorize } from "../../middlewares/role.middleware.js";
 
 const router = express.Router();
 
-// Create announcement (Admin only)
-router.post("/", authenticate, authorize(["ADMIN"]), createAnnouncement);
+// Create announcement with optional image (Admin only)
+router.post("/", authenticate, authorize(["ADMIN"]), upload.single('image'), createAnnouncement);
 
 // Get all announcements (All authenticated users)
 router.get("/", authenticate, getAnnouncements);
@@ -20,8 +21,8 @@ router.get("/", authenticate, getAnnouncements);
 // Get single announcement (All authenticated users)
 router.get("/:id", authenticate, getAnnouncementById);
 
-// Update announcement (Admin only)
-router.put("/:id", authenticate, authorize(["ADMIN"]), updateAnnouncement);
+// Update announcement with optional image (Admin only)
+router.put("/:id", authenticate, authorize(["ADMIN"]), upload.single('image'), updateAnnouncement);
 
 // Delete announcement (Admin only)
 router.delete("/:id", authenticate, authorize(["ADMIN"]), deleteAnnouncement);

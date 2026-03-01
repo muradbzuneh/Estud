@@ -24,17 +24,16 @@ export const loginStudent = async(req:Request, res:Response) =>{
        {expiresIn : process.env.JWT_EXPIRES_IN}
         )
      res.status(200).json({
-        message:"Login sucesssfuly",
+        message:"Login successfully",
         token,
         student:{
             id:student.id,
             name:student.name,
-            email:student.email
+            email:student.email,
+            role:student.role
         }
         
-     })
-     console.log("User Role:", req.userRole)
-   console.log("Allowed Roles:", roles) 
+     }) 
     }  
     catch(error: any){
         res.status(500).json({message:"server error", error: error.message})

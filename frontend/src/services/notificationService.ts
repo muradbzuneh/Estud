@@ -5,26 +5,45 @@ export interface Notification {
   user: string;
   title: string;
   message: string;
-  type: 'announcement' | 'marketplace';
-  referenceId: string;
+  type: 'announcement' | 'reservation' | 'marketplace';
+  referenceId?: string;
   isRead: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
 export const notificationService = {
-  getMyNotifications: async (): Promise<Notification[]> => {
-    const { data } = await api.get('/notify');
+  // Get user's notifications with pagination
+  getMyNotifications: async (page: number = 1, limit: number = 20) => {
+    const { data } = await api.get('/notifications', { 
+      params: { page, limit } 
+    });
     return data;
   },
 
+  // Mark single notification as read
   markAsRead: async (id: string) => {
-    const { data } = await api.patch(`/notify/${id}/read`);
+    const { data } = await api.patch(`/notifications/${id}/read`);
     return data;
   },
 
+  // Mark all notifications as read
+  markAllAsRead: async () => {
+    const { data } = await api.patch('/notifications/read-all');
+    return data;
+  },
+
+  // Delete notification
+  deleteNotification: async (id: string) => {
+    const { data } = await api.delete(`/notifications/${id}`);
+    return data;
+  },
+
+  // Get unread count (from the main response)
   getUnreadCount: async (): Promise<number> => {
-    const { data } = await api.get('/notify/unread/count');
-    return data.count;
+    const { data } = await api.get('/notifications', { 
+      params: { page: 1, limit: 1 } 
+    });
+    return data.unreadCount || 0;
   }
 };

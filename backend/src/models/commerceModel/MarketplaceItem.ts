@@ -18,7 +18,7 @@ const marketplaceSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ["books", "electronics", "durawing-material", "other"],
+    enum: ["books", "electronics", "drawing-material", "other"],
     default: "other"
   },
   department: {
