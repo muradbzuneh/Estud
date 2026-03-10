@@ -4,7 +4,8 @@ import Card from '../../components/Card';
 import { marketplaceService } from '../../services/marketplaceService';
 import type { MarketplaceItem } from '../../types';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/';
+
 
 export default function MarketplaceList() {
   const [items, setItems] = useState<MarketplaceItem[]>([]);
@@ -45,6 +46,7 @@ export default function MarketplaceList() {
           <p className="text-gray-600 col-span-full text-center py-8">No items available</p>
         ) : (
           items.map((item) => (
+            
             <Card
               key={item._id}
               onClick={() => navigate(`/marketplace/${item._id}`)}
@@ -52,13 +54,14 @@ export default function MarketplaceList() {
             >
               {item.images && item.images.length > 0 ? (
                 <img
-                  src={`${API_URL}${item.images[0]}`}
-                  alt={item.title}
-                  className="w-full h-48 object-cover rounded-t-lg mb-3"
-                  onError={(e) => {
-                    e.currentTarget.src = 'https://via.placeholder.com/300x200?text=No+Image';
-                  }}
-                />
+  src={
+    item.images && item.images.length > 0
+      ? `${API_URL}${item.images[0]}`
+      : "/no-image.png"
+  }
+  alt={item.title}
+/>
+                
               ) : (
                 <div className="w-full h-48 bg-gray-200 rounded-t-lg mb-3 flex items-center justify-center">
                   <span className="text-gray-400">No Image</span>
@@ -78,6 +81,7 @@ export default function MarketplaceList() {
                 Category: {item.category}
               </p>
             </Card>
+            
           ))
         )}
       </div>

@@ -15,8 +15,10 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 
 export default function App() {
   return (
+    
     <AuthProvider>
       <BrowserRouter>
+      
         <Navbar />
         <Routes>
           <Route path="/login" element={<Login />} />

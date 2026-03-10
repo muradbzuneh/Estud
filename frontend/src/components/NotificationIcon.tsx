@@ -24,10 +24,10 @@ export default function NotificationIcon() {
     const load = async () => {
       try {
         const data = await notificationService.getMyNotifications();
-        if (mounted) {
-          setNotifications(data);
-          setUnreadCount(data.filter(n => !n.isRead).length);
-        }
+        if (mounted && Array.isArray(data)) {
+  setNotifications(data);
+  setUnreadCount(data.filter(n => !n.isRead).length);
+}
       } catch (error) {
         console.error('Failed to load notifications:', error);
       }

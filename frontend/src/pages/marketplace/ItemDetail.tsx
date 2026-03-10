@@ -4,7 +4,7 @@ import Button from '../../components/Button';
 import { marketplaceService } from '../../services/marketplaceService';
 import type { MarketplaceItem } from '../../types';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/uploads';
 
 export default function ItemDetail() {
   const { id } = useParams<{ id: string }>();
@@ -66,13 +66,14 @@ export default function ItemDetail() {
         {/* Image Gallery */}
         <div>
           {item.images && item.images.length > 0 ? (
-            <>
+         <>
               <img
                 src={`${API_URL}${item.images[currentImageIndex]}`}
                 alt={item.title}
                 className="w-full h-96 object-cover rounded-lg shadow-lg"
                 onError={(e) => {
-                  e.currentTarget.src = 'https://via.placeholder.com/600x400?text=No+Image';
+                  e.currentTarget.src = '/Drawing1.jpg';
+
                 }}
               />
               {item.images.length > 1 && (
@@ -87,7 +88,7 @@ export default function ItemDetail() {
                       }`}
                       onClick={() => setCurrentImageIndex(idx)}
                       onError={(e) => {
-                        e.currentTarget.src = 'https://via.placeholder.com/80?text=No+Image';
+                        e.currentTarget.src = '/Drawing.jpg';
                       }}
                     />
                   ))}
