@@ -4,7 +4,7 @@ import Button from '../../components/Button';
 import { marketplaceService } from '../../services/marketplaceService';
 import type { MarketplaceItem } from '../../types';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/uploads';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function ItemDetail() {
   const { id } = useParams<{ id: string }>();
