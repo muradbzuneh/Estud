@@ -3,6 +3,12 @@ import { AuthRequest } from "../../middlewares/auth.middleware.js";
 import TimeSlot from "../../models/cafeModel/timeSlot.js";
 import Reservation from "../../models/cafeModel/Reservation.js";
 
+// Helper function to validate time format (HH:MM)
+function validateTimeFormat(time: string): boolean {
+  const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+  return timeRegex.test(time);
+}
+
 // FR-8: Café manager creates time slots
 export const createTimeSlot = async (req: Request, res: Response) => {
   try {
@@ -11,6 +17,20 @@ export const createTimeSlot = async (req: Request, res: Response) => {
     if (!date || !startTime || !endTime || !capacity) {
       return res.status(400).json({ 
         message: "date, startTime, endTime, and capacity are required" 
+      });
+    }
+
+    // Validate time format
+    if (!validateTimeFormat(startTime) || !validateTimeFormat(endTime)) {
+      return res.status(400).json({ 
+        message: "Time must be in HH:MM format (e.g., 09:00, 14:30)" 
+      });
+    }
+
+    // Validate endTime is after startTime
+    if (startTime >= endTime) {
+      return res.status(400).json({ 
+        message: "End time must be after start time" 
       });
     }
 
@@ -117,6 +137,19 @@ export const updateTimeSlot = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const updates = req.body;
+
+    // Validate time format if times are being updated
+    if (updates.startTime && !validateTimeFormat(updates.startTime)) {
+      return res.status(400).json({ 
+        message: "Start time must be in HH:MM format" 
+      });
+    }
+
+    if (updates.endTime && !validateTimeFormat(updates.endTime)) {
+      return res.status(400).json({ 
+        message: "End time must be in HH:MM format" 
+      });
+    }
 
     const slot = await TimeSlot.findByIdAndUpdate(
       id,

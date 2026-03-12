@@ -4,6 +4,23 @@ import { AuthRequest } from "../../middlewares/auth.middleware.js";
 import Reservation from "../../models/cafeModel/Reservation.js";
 import TimeSlot from "../../models/cafeModel/timeSlot.js";
 
+// Helper function to check time overlap
+function checkTimeOverlap(
+  slot1Start: string, 
+  slot1End: string, 
+  slot2Start: string, 
+  slot2End: string
+): boolean {
+  return (
+    // Slot 1 starts during slot 2
+    (slot1Start >= slot2Start && slot1Start < slot2End) ||
+    // Slot 1 ends during slot 2
+    (slot1End > slot2Start && slot1End <= slot2End) ||
+    // Slot 1 completely encompasses slot 2
+    (slot1Start <= slot2Start && slot1End >= slot2End)
+  );
+}
+
 export const createReservation = async (req: AuthRequest, res: Response) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -29,7 +46,7 @@ export const createReservation = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ message: "Slot is full. Booking disabled." });
     }
 
-    // FR-13: Prevent overlapping bookings
+    // FR-13: Prevent overlapping bookings (FIXED with comprehensive overlap check)
     const existingReservations = await Reservation.find({
       user: userId,
       status: "confirmed"
@@ -38,9 +55,19 @@ export const createReservation = async (req: AuthRequest, res: Response) => {
     const hasOverlap = existingReservations.some((res: any) => {
       if (!res.timeSlot) return false;
       const existingSlot = res.timeSlot;
-      return existingSlot.date.toDateString() === slot.date.toDateString() &&
-             ((slot.startTime >= existingSlot.startTime && slot.startTime < existingSlot.endTime) ||
-              (slot.endTime > existingSlot.startTime && slot.endTime <= existingSlot.endTime));
+      
+      // Must be same date
+      if (existingSlot.date.toDateString() !== slot.date.toDateString()) {
+        return false;
+      }
+      
+      // Check all overlap scenarios using helper function
+      return checkTimeOverlap(
+        slot.startTime,
+        slot.endTime,
+        existingSlot.startTime,
+        existingSlot.endTime
+      );
     });
 
     if (hasOverlap) {

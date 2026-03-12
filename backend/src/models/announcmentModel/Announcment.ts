@@ -46,13 +46,19 @@ const announcementSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Auto-deactivate expired announcements
+// FIXED: Auto-filter expired and inactive announcements
+// Changed from $or to $and logic
 announcementSchema.pre('find', function() {
   this.where({ 
-    $or: [
-      { expiresAt: { $gte: new Date() } },
-      { isActive: true }
-    ]
+    isActive: true,
+    expiresAt: { $gte: new Date() }
+  });
+});
+
+announcementSchema.pre('findOne', function() {
+  this.where({ 
+    isActive: true,
+    expiresAt: { $gte: new Date() }
   });
 });
 
