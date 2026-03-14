@@ -32,8 +32,8 @@ const timeSlotSchema = new mongoose.Schema({
 timeSlotSchema.pre('save', function(next) {
   if (this.isNew) {
     this.availableSeats = this.capacity;
-  }
-  next();
+  };
+  
 });
 
 // Compound index to prevent duplicate slots

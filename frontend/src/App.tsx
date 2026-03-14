@@ -15,6 +15,9 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 
 export default function App() {
   return (
+    <>
+    <div className="min-h-screen bg-linear-to-r/increasing from-indigo-500 to-teal-400">
+
     
     <AuthProvider>
       <BrowserRouter>
@@ -36,5 +39,8 @@ export default function App() {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+    </div>
+    </>
+    
   );
 }

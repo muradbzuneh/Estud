@@ -16,16 +16,14 @@ export default function Navbar() {
     <nav className="bg-white shadow-md">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="text-xl font-bold text-blue-600">
-            Campus App
+          <Link to="/" className="text-xl font-bold text-blue-600 ">
+            Estud App
           </Link>
 
           <div className="flex items-center gap-6">
             {isAuthenticated ? (
               <>
-                <Link to="/dashboard" className="text-gray-700 hover:text-blue-600">
-                  Dashboard
-                </Link>
+              
                 <Link to="/announcements" className="text-gray-700 hover:text-blue-600">
                   Announcements
                 </Link>
@@ -35,10 +33,7 @@ export default function Navbar() {
                 <Link to="/cafe/bookings" className="text-gray-700 hover:text-blue-600">
                   My Bookings
                 </Link>
-                <Link to="/marketplace" className="text-gray-700 hover:text-blue-600">
-                  Marketplace
-                </Link>
-                {user?.role === 'admin' && (
+                {user?.role === 'ADMIN' && (
                   <Link to="/admin" className="text-gray-700 hover:text-blue-600">
                     Admin
                   </Link>

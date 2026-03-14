@@ -35,8 +35,8 @@ export const createTimeSlot = async (req: Request, res: Response) => {
     }
 
     // FR-9: Validate capacity
-    if (capacity < 1) {
-      return res.status(400).json({ message: "Capacity must be at least 1" });
+    if (capacity < 1 || capacity > 5) {
+      return res.status(400).json({ message: "Capacity must be between 1 up to 5" });
     }
 
     const slot = await TimeSlot.create({
@@ -71,8 +71,8 @@ export const getTimeSlots = async (req: AuthRequest, res: Response) => {
     const { date } = req.query;
     
     let filter: any = { 
-      isActive: true,
-      date: { $gte: new Date() } // Only future slots
+      isActive: true
+      // date: { $gte: new Date() } // Only future slots
     };
 
     if (date) {
