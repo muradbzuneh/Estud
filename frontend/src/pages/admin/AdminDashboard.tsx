@@ -14,13 +14,15 @@ export default function AdminDashboard() {
   // Announcement form state
   const [announcementForm, setAnnouncementForm] = useState({
     title: '',
-    content: ''
+    content: '',
+    targetGroup:'',
+    expiresAt:''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    if (user?.role !== 'admin') {
+    if (user?.role !== 'ADMIN') {
       navigate('/dashboard');
     }
   }, [user, navigate]);
@@ -33,7 +35,7 @@ export default function AdminDashboard() {
     try {
       await announcementService.create(announcementForm);
       setMessage('Announcement created successfully!');
-      setAnnouncementForm({ title: '', content: '' });
+      setAnnouncementForm({ title: '', content: '',targetGroup:'', expiresAt:'' });
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Failed to create announcement');
     } finally {
@@ -41,7 +43,7 @@ export default function AdminDashboard() {
     }
   };
 
-  if (user?.role !== 'admin') {
+  if (user?.role !== 'ADMIN') {
     return null;
   }
 
@@ -106,6 +108,27 @@ export default function AdminDashboard() {
                 required
               />
             </div>
+            <div>
+        <select
+              className="border p-2 rounded"
+              name="targetGroup"
+              value={announcementForm.targetGroup}
+              onChange={(e) =>
+                setAnnouncementForm({
+                  ...announcementForm,
+                  targetGroup: e.target.value
+                })
+              }
+            >
+              <option value="">Select Target Group</option>
+              <option value="UNIVERSITY">University</option>
+              <option value="DEPARTMENT">Department</option>
+              <option value="CLASS">Class</option>
+          </select>
+            </div>
+            <Input type='date' value={announcementForm.expiresAt} 
+            onChange={(e) => setAnnouncementForm({...announcementForm, expiresAt:e.target.value})}
+            />
             {message && (
               <div className={`p-3 rounded ${message.includes('success') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                 {message}

@@ -23,7 +23,8 @@ export default function Navbar() {
           <div className="flex items-center gap-6">
             {isAuthenticated ? (
               <>
-              
+               {user?.role === "STUDENT" && (
+                <>
                 <Link to="/announcements" className="text-gray-700 hover:text-blue-600">
                   Announcements
                 </Link>
@@ -33,9 +34,11 @@ export default function Navbar() {
                 <Link to="/cafe/bookings" className="text-gray-700 hover:text-blue-600">
                   My Bookings
                 </Link>
+                </>
+              )}
                 {user?.role === 'ADMIN' && (
                   <Link to="/admin" className="text-gray-700 hover:text-blue-600">
-                    Admin
+                    Announcements
                   </Link>
                 )}
                 <NotificationIcon />

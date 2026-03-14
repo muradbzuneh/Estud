@@ -1,14 +1,17 @@
 import { Link } from "react-router-dom";
-
+import { useAuth } from "../context/AuthContext";
 export default function Dashboard() {
+  const { user, isAuthenticated } = useAuth();
   return (
     <div className="min-h-screen w-full bg-[url('/home.jpg')] bg-cover bg-center bg-no-repeat p-6">
       
       <div className="max-w-6xl mx-auto">
-
-        <h1 className="text-3xl font-bold text-white mb-8">
+      {user?.role === 'ADMIN' ? <h1 className="text-3xl font-bold text-white mb-8">
+          Admin Dashboard
+        </h1>:<h1 className="text-3xl font-bold text-white mb-8">
           Student Dashboard
-        </h1>
+        </h1>}
+        
 
         <div className="grid md:grid-cols-3 gap-8">
 
