@@ -16,7 +16,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 export default function App() {
   return (
     <>
-    <div className="min-h-screen bg-linear-to-r/increasing from-indigo-500 to-teal-400">
+    <div className="">
 
     
     <AuthProvider>
